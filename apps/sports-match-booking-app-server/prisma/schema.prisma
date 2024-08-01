@@ -1,0 +1,48 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Sport {
+  createdAt   DateTime @default(now())
+  description String?
+  id          String   @id @default(cuid())
+  matches     Match[]
+  name        String?
+  updatedAt   DateTime @updatedAt
+}
+
+model Match {
+  createdAt            DateTime                    @default(now())
+  createdBy            String?
+  genderRestriction    EnumMatchGenderRestriction?
+  id                   String                      @id @default(cuid())
+  isFilled             Boolean?
+  matchLocation        String?
+  matchTime            DateTime?
+  numberOfParticipants Int?
+  sport                Sport?                      @relation(fields: [sportId], references: [id])
+  sportId              String?
+  updatedAt            DateTime                    @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  gender    String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+enum EnumMatchGenderRestriction {
+  Option1
+}
